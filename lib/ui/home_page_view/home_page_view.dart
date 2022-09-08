@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/ui/login_view/login_view.dart';
-import 'package:mynotes/ui/register_view/register_view.dart';
+import 'package:mynotes/ui/notes_view/notes_view.dart';
 import 'package:mynotes/ui/verify_email_view/verify_email_view.dart';
 
 import '../../firebase_options.dart';
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
               if (user != null) {
                 if (user.emailVerified) {
                   print('Email verified!');
-                  return const RegisterView();
+                  return const NotesView();
                 } else {
                   return const VerifyEmailView();
                 }

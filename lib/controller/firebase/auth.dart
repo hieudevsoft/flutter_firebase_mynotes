@@ -11,3 +11,11 @@ Future<UserCredential> signInWithEmailAndPassword(
   return FirebaseAuth.instance
       .signInWithEmailAndPassword(email: email, password: password);
 }
+
+Future<void> logout() {
+  return FirebaseAuth.instance.signOut();
+}
+
+User getCurrentUser() {
+  return FirebaseAuth.instance.currentUser!;
+}

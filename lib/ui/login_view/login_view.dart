@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/controller/firebase/auth.dart';
 
-import '../../firebase_options.dart';
+import '../../utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -16,11 +14,11 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  String _error = "";
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+
     super.initState();
   }
 
@@ -67,22 +65,24 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(
               height: 10,
             ),
-            Visibility(
-              visible: _error.isNotEmpty,
-              child: Text(
-                _error,
-                style: const TextStyle(color: Colors.red),
-              ),
-            ),
             TextButton(
                 onPressed: () async {
                   try {
-                    final credential = await signInWithEmailAndPassword(
-                        _email.text, _password.text);
-                    _error = "";
+                    final credentinal = await signInWithEmailAndPassword(
+                      _email.text,
+                      _password.text,
+                    );
+                    if (!mounted) return;
+                    if (credentinal.user != null) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/notes',
+                        (route) => false,
+                      );
+                    }
+                    FocusManager.instance.primaryFocus?.unfocus();
                   } on FirebaseAuthException catch (e) {
-                    print(e.code);
-                    _error = e.code;
+                    if (!mounted) return;
+                    await showErrorDialog(context, e.code);
                   }
                 },
                 child: const Text("Login")),
